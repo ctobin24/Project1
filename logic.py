@@ -43,11 +43,6 @@ class Logic(QMainWindow, Ui_MainWindow):
                 self.message_label.setStyleSheet("color : red;")
                 self.message_label.setText('Invalid input for ID')
 
-                if self.candidate_button_group.checkedButton() is None:
-                    self.message_label.setText("dfg")
-                    return
-                else:
-                    vote = self.candidate_button_group.checkedButton().text()
 
             try:
                 with open('results.csv', 'r') as csvfile:
