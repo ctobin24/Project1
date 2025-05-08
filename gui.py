@@ -97,7 +97,7 @@ class Ui_MainWindow(object):
         self.results_textbox.setText("")
         self.results_textbox.setObjectName("results_textbox")
         self.message_label = QtWidgets.QLabel(parent=self.centralwidget)
-        self.message_label.setGeometry(QtCore.QRect(320, 540, 111, 41))
+        self.message_label.setGeometry(QtCore.QRect(321, 540, 111, 41))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.message_label.setFont(font)
