@@ -2,10 +2,12 @@ from PyQt6.QtWidgets import *
 from gui import *
 import csv
 
+
 class Logic(QMainWindow, Ui_MainWindow):
     """
     A class representing the logic for the voting gui
     """
+
     def __init__(self):
         """
         Method that sets up the default logic for the voting gui
@@ -22,44 +24,58 @@ class Logic(QMainWindow, Ui_MainWindow):
         Method that is called upon when the user presses the SUMBIT button in the voting gui, then saves users name, id_num, and vote to the csvfile
         :return:None
         """
-
-        name = self.name_input.text().strip()
+        global vote
         try:
-            if not name.isalpha():
-                raise TypeError
-        except TypeError:
-            self.message_label.setStyleSheet("color : red;")
-            self.message_label.setText('Invalid input for Name')
 
+            name = self.name_input.text().strip()
+            try:
+                if not name.isalpha():
+                    raise TypeError
+            except TypeError:
+                self.message_label.setStyleSheet("color : red;")
+                self.message_label.setText('Invalid input for Name')
 
-        id_num = self.id_input.text().strip()
-        try:
-            if not id_num.isdigit():
-                raise TypeError
-        except TypeError:
-            self.message_label.setStyleSheet("color : red;")
-            self.message_label.setText('Invalid input for ID')
+            id_num = self.id_input.text().strip()
+            try:
+                if not id_num.isdigit():
+                    raise TypeError
+            except TypeError:
+                self.message_label.setStyleSheet("color : red;")
+                self.message_label.setText('Invalid input for ID')
 
-        vote = self.candidate_button_group.checkedButton().text()
+                if self.candidate_button_group.checkedButton() is None:
+                    self.message_label.setText("dfg")
+                    return
+                else:
+                    vote = self.candidate_button_group.checkedButton().text()
 
-        try:
-            with open('results.csv', 'r') as csvfile:
-                content = csv.reader(csvfile, delimiter=',')
-                for line in content:
-                    if line[1] == id_num:
-                        raise ValueError
-        except ValueError:
-            self.message_label.setStyleSheet("color : red;")
-            self.message_label.setText("Already voted")
-        else:
-            csvfile.close()
-            with open('results.csv', 'a', newline='') as csvfile:
-                content = csv.writer(csvfile)
-
-                content.writerow([name, id_num, vote])
-
+            try:
+                with open('results.csv', 'r') as csvfile:
+                    content = csv.reader(csvfile, delimiter=',')
+                    for line in content:
+                        if line[1] == id_num:
+                            raise ValueError
+            except ValueError:
+                self.message_label.setStyleSheet("color : red;")
+                self.message_label.setText("Already voted")
+            else:
                 csvfile.close()
-        self.clear()
+                with open('results.csv', 'a', newline='') as csvfile:
+                    content = csv.writer(csvfile)
+                    if self.candidate_button_group.checkedButton() is None:
+                        self.message_label.setStyleSheet("color : red;")
+                        self.message_label.setText("Select a candidate")
+                        return
+                    else:
+                        vote = self.candidate_button_group.checkedButton().text()
+                    content.writerow([name, id_num, vote])
+
+                    csvfile.close()
+            self.clear()
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+
 
     def clear(self) -> None:
         """
@@ -87,4 +103,5 @@ class Logic(QMainWindow, Ui_MainWindow):
             for line in content:
                 results.append(line[2])
 
-        self.results_textbox.setText(f'Bianca:{results.count('Bianca')}\nEdward:{results.count('Edward')}\nFelicia:{results.count('Felicia')}')
+        self.results_textbox.setText(
+            f'Bianca:{results.count('Bianca')}\nEdward:{results.count('Edward')}\nFelicia:{results.count('Felicia')}')
