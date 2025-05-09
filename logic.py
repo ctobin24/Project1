@@ -15,6 +15,7 @@ class Logic(QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
 
+        #Connecting the push buttons
         self.submit_button.clicked.connect(lambda: self.submit())
         self.clear_button.clicked.connect(lambda: self.clear())
         self.results_button.clicked.connect(lambda: self.view_results())
@@ -27,6 +28,7 @@ class Logic(QMainWindow, Ui_MainWindow):
         global vote
         try:
 
+            #Getting name from the gui and checking if it is a valid input
             name = self.name_input.text().strip()
             try:
                 if not name.isalpha():
@@ -35,6 +37,7 @@ class Logic(QMainWindow, Ui_MainWindow):
                 self.message_label.setStyleSheet("color : red;")
                 self.message_label.setText('Invalid input for Name')
 
+            #Getting the id from the gui and checkin if it is a valid input
             id_num = self.id_input.text().strip()
             try:
                 if not id_num.isdigit():
@@ -43,7 +46,7 @@ class Logic(QMainWindow, Ui_MainWindow):
                 self.message_label.setStyleSheet("color : red;")
                 self.message_label.setText('Invalid input for ID')
 
-
+            #Checks the csvfile if the users id has already been added
             try:
                 with open('results.csv', 'r') as csvfile:
                     content = csv.reader(csvfile, delimiter=',')
@@ -55,6 +58,7 @@ class Logic(QMainWindow, Ui_MainWindow):
                 self.message_label.setText("Already voted")
             else:
                 csvfile.close()
+                #Writes and saves to the file
                 with open('results.csv', 'a', newline='') as csvfile:
                     content = csv.writer(csvfile)
                     if self.candidate_button_group.checkedButton() is None:
@@ -67,6 +71,7 @@ class Logic(QMainWindow, Ui_MainWindow):
 
                     csvfile.close()
             self.clear()
+        #LA helped with this and he added this try and except statement
         except Exception as e:
             import traceback
             traceback.print_exc()
