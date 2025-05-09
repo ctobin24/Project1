@@ -71,7 +71,7 @@ class Logic(QMainWindow, Ui_MainWindow):
 
                     csvfile.close()
             self.clear()
-        #LA helped with this and he added this try and except statement
+        #LA helped with this, and he added this try and except statement
         except Exception as e:
             import traceback
             traceback.print_exc()
